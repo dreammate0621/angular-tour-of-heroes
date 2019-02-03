@@ -2,10 +2,13 @@
 	color: #ffffff;
 	background: #cecece;
 	max-width: 150px;
+	margin: 10px;
+	border-radius: 4px;
 }
 
 .hero-item span {
 	display: inline-block;
 	background-color: #607D8B;
 	padding: 10px;
+	border-radius: 4px 0px 0px 4px;
 }

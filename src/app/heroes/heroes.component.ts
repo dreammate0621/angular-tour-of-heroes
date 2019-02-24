@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 
 import { Hero } from '../hero';
+import { HeroService } from '../hero.service';
 
 @Component({
   selector: 'app-heroes',
@@ -9,34 +9,36 @@ import { Hero } from '../hero';
   styleUrls: ['./heroes.component.css']
 })
 export class HeroesComponent implements OnInit {
+  heroes: Hero[];
+  loading = false;
 
-	heroes: Hero[] = [
-    {
-      id: 1,
-      name: 'Name 1'
-    },
-    {
-      id: 2,
-      name: 'Name 2'
-    },
-    {
-      id: 3,
-      name: 'Name 3'
-    },
-  ];
-  selectedHero: Hero;
-	
-  constructor(private location: Location) { }
+  constructor(private heroService: HeroService) { }
 
   ngOnInit() {
+    this.getHeroes();
   }
 
-  goBack(): void {
-    this.location.back();
+  getHeroes(): void {
+    this.loading = true;
+    this.heroService.getHeroes()
+    .subscribe(heroes => {
+      this.heroes = heroes;
+      this.loading = false;
+    });
   }
 
-  showDetail(hero: Hero): void {
-    this.selectedHero = hero;
+  add(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.heroService.addHero({ name } as Hero)
+      .subscribe(hero => {
+        this.heroes.push(hero);
+      });
+  }
+
+  delete(hero: Hero): void {
+    this.heroes = this.heroes.filter(h => h !== hero);
+    this.heroService.deleteHero(hero).subscribe();
   }
 
 }
